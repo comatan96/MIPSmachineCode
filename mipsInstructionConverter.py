@@ -1,22 +1,21 @@
-
 import commands_and_regs as instructions
+
 
 class InstructionIdentifier:
 
-#constructor
+    # constructor
     def __init__(self, instruction):
         self.instruction = str(instruction).split()
         self.command_format = instructions.instructions_list[str(self.instruction[0])]['format']
         self.opcode = instructions.instructions_list[str(self.instruction[0])]['opcode']
         self.command_order = instructions.instructions_list[str(self.instruction[0])]['order']
-        if self.command_format == 'R' :
+        if self.command_format == 'R':
             self.r_registers()
             self.funct = instructions.instructions_list[str(self.instruction[0])]['fun']
         if self.command_format == 'I':
             self.i_registers()
 
-
-
+    # to string
     def __str__(self):
         command = ' '.join(self.instruction)
         foramt = "    format: " + str(self.command_format)
@@ -35,13 +34,14 @@ class InstructionIdentifier:
             regs = rt + rs + imm
         else:
             regs = "    target    " + self.instruction[1] if self.command_format == 'J' else "    rs : " + self.instruction[1]
-            
+
         return command + ("    -->    ") + foramt + opcode + regs
 
 
+    #initiallizing the registers for format R commands
     def r_registers(self):
         if self.command_order == 's':
-            self.rs = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1] 
+            self.rs = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1]
         else:
             self.rd = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1]
             self.rs = self.instruction[2] if self.command_order == 'dst' else self.instruction[3]
@@ -49,6 +49,7 @@ class InstructionIdentifier:
             self.rt = self.instruction[3] if self.command_order == 'dst' else self.instruction[2]
             self.rt = instructions.registers[self.rt] if self.rt in instructions.registers else self.rt
 
+    #initiallizing the registers for format I commands depends on instruction order
     def i_registers(self):
         if self.command_order == 'offset':
             self.instruction = ' '.join(self.instruction)
@@ -65,4 +66,3 @@ class InstructionIdentifier:
             self.rt = self.instruction[2] if self.command_order == 'branch' else self.instruction[1]
             self.rt = instructions.registers[self.rt] if self.rt in instructions.registers else self.rt
             self.imm = self.instruction[3]
-
