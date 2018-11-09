@@ -1,4 +1,4 @@
-###Features
+### Features
 
 - Support MIPS assembly
 
@@ -10,12 +10,12 @@
 
 **Table of Contents**
 
-###FlowChart
+### FlowChart
 
 ```flow
 st=>start: Enter MIPS instruction
 op=>operation: breaking the instruction into pieces
-cond=>condition: valid instruction?
+cond=>condition: valid instruction Yes or No?
 e=>end: returns the machine code of the instruction
 
 st->op->cond
