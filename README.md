@@ -7,18 +7,6 @@
 ![otter](https://github.com/comatan96/OTTERmips/blob/master/otter%20mips.png)
 
 
+# Description
 
-**Table of Contents**
-
-### FlowChart
-
-```flow
-st=>start: Enter MIPS instruction
-op=>operation: breaking the instruction into pieces
-cond=>condition: valid instruction Yes or No?
-e=>end: returns the machine code of the instruction
-
-st->op->cond
-cond(yes)->e
-cond(no)->st
-```
+OTTER Mips is a python based program to convert MIPS Assembly to machine code.
