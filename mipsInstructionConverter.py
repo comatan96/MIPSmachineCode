@@ -1,17 +1,20 @@
-import commands_and_regs as instructions
+import commands_and_regs as data
 
 
 class InstructionIdentifier:
 
     # constructor
     def __init__(self, instruction):
+        #splitting the MIPS instruction into registers and command
+        #saving the data into the instance variables
         self.instruction = str(instruction).split()
-        self.command_format = instructions.instructions_list[str(self.instruction[0])]['format']
-        self.opcode = instructions.instructions_list[str(self.instruction[0])]['opcode']
-        self.command_order = instructions.instructions_list[str(self.instruction[0])]['order']
+        self.command_format = data.instructions_list[str(self.instruction[0])]['format']
+        self.opcode = data.instructions_list[str(self.instruction[0])]['opcode']
+        self.command_order = data.instructions_list[str(self.instruction[0])]['order']
+        #depending on the command format , initializing  the registers
         if self.command_format == 'R':
             self.r_registers()
-            self.funct = instructions.instructions_list[str(self.instruction[0])]['fun']
+            self.funct = data.instructions_list[str(self.instruction[0])]['fun']
         if self.command_format == 'I':
             self.i_registers()
 
@@ -20,7 +23,6 @@ class InstructionIdentifier:
         command = ' '.join(self.instruction)
         foramt = "    format: " + str(self.command_format)
         opcode = "    opcode: " + str(self.opcode)
-        command_order = str(self.command_order)
         if (self.command_format == 'R') and (self.instruction[0] != 'jr'):
             rd = "    rd: " + str(self.rd)
             rt = "    rt: " + str(self.rt)
@@ -41,13 +43,13 @@ class InstructionIdentifier:
     #initiallizing the registers for format R commands
     def r_registers(self):
         if self.command_order == 's':
-            self.rs = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1]
+            self.rs = data.registers.get(data.instructions_list[1],self.instruction[1])
         else:
-            self.rd = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1]
+            self.rd = data.registers.get(data.instructions_list[1],self.instruction[1])
             self.rs = self.instruction[2] if self.command_order == 'dst' else self.instruction[3]
-            self.rs = instructions.registers[self.rs] if self.rs in instructions.registers else self.rs
+            self.rs = data.registers[self.rs] if self.rs in data.registers else self.rs
             self.rt = self.instruction[3] if self.command_order == 'dst' else self.instruction[2]
-            self.rt = instructions.registers[self.rt] if self.rt in instructions.registers else self.rt
+            self.rt = data.registers[self.rt] if self.rt in data.registers else self.rt
 
     #initiallizing the registers for format I commands depends on instruction order
     def i_registers(self):
@@ -57,12 +59,12 @@ class InstructionIdentifier:
             self.instruction = self.instruction.replace(')', '')
             print (self.instruction)
             self.instruction = self.instruction.split()
-            self.rt = instructions.registers[self.instruction[1]] if self.instruction[1] in instructions.registers else self.instruction[1]
-            self.imm = instructions.registers[self.instruction[2]] if self.instruction[2] in instructions.registers else self.instruction[2]
-            self.rs = instructions.registers[self.instruction[3]] if self.instruction[3] in instructions.registers else self.instruction[3]
+            self.rt = data.registers.get(data.instructions_list[1],self.instruction[1])
+            self.imm = data.registers.get(self.instruction[2],self.instruction[2])
+            self.rs = data.registers.get(self.instruction[3],self.instruction[3])
         elif (self.command_order == 'branch') or (self.command_order == 'tsi'):
             self.rs = self.instruction[1] if self.command_order == 'branch' else self.instruction[2]
-            self.rs = instructions.registers[self.rs] if self.rs in instructions.registers else self.rs
+            self.rs = data.registers[self.rs] if self.rs in data.registers else self.rs
             self.rt = self.instruction[2] if self.command_order == 'branch' else self.instruction[1]
-            self.rt = instructions.registers[self.rt] if self.rt in instructions.registers else self.rt
+            self.rt = data.registers[self.rt] if self.rt in data.registers else self.rt
             self.imm = self.instruction[3]
