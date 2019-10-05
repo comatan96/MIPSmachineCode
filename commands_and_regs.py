@@ -65,5 +65,6 @@ size = {
     'rs':5,
     'rd':5,
     'imm':16,
-    'shamt':6
+    'shamt':5,
+    'funct':6,
 }
