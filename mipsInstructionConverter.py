@@ -50,6 +50,42 @@ class InstructionIdentifier:
 
         return command + ("  -->") + foramt + opcode + regs
 
+    def machine_code_detailed(self):
+        def bin_sized(dec_num,type_):
+            bits_size = data.size[type_]
+            num_bin = bin(dec_num)[2:]
+            if len(num_bin) < bits_size:
+                missing_zeros = bits_size - len(num_bin)
+                return ('0'*missing_zeros+num_bin)
+            return num_bin
+
+        if (self.command_format == 'R') and (self.instruction[0] != 'jr'):
+            opcode = "\n\nopcode ->  " +bin_sized(self.opcode,'opcode')
+            rd = "    \n\nrd -> " +bin_sized(self.rd,'rd')
+            rt = "    \n\nrt -> " +bin_sized(self.rt,'rt')
+            rs = "    \n\nrs -> " +bin_sized(self.rs,'rs')
+            funct = "    \n\nfunct -> " +bin_sized(self.funct,'funct')
+            #TODO move shamt to init
+            if (self.funct == 0) or (self.funct == 2):
+                self.shamt = int(self.instruction[2])
+            else:
+                self.shamt = 0
+            shamt = "    \n\nshamt -> " +bin_sized(self.shamt,'shamt')
+            regs = rd + rt + rs + shamt + funct 
+            #m_code = machine_code('R')
+        elif self.command_format == 'I':
+            rt = "    rt: " + bin_sized(self.rt,'rt')
+            rs = "    rs: " + bin_sized(self.rs,'rs')
+            imm = "    imm: " + bin_sized(self.imm,'imm')
+            
+            regs = rt + rs + imm
+            #m_code = machine_code('I')
+        else:
+            regs = "    target    " + self.instruction[1] if self.command_format == 'J' else "    rs : " + self.instruction[1]
+
+        return (opcode + regs)
+
+    #TODO condsider rtype shift
     #initiallizing the registers for format R commands
     def r_registers(self):
         if self.command_order == 's':
@@ -78,11 +114,3 @@ class InstructionIdentifier:
             self.rt = self.instruction[2] if self.command_order == 'branch' else self.instruction[1]
             self.rt = data.registers[self.rt] if self.rt in data.registers else self.rt
             self.imm = self.instruction[3]
-
-    def hex_sized(self,dec_num,type_):
-        bits_size = data.size[type_]
-        num_hex = hex(dec_num)[:2]
-        if len(num_hex) < bits_size:
-            missing_zeros = bits_size - len(num_hex)
-            return ('0'*missing_zeros+num_hex)
-        return num_hex
