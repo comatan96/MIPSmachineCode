@@ -85,6 +85,44 @@ class InstructionIdentifier:
 
         return (opcode + regs)
 
+    def machine_code(self):
+        def bin_sized(dec_num,type_):
+            bits_size = data.size[type_]
+            num_bin = bin(dec_num)[2:]
+            if len(num_bin) < bits_size:
+                missing_zeros = bits_size - len(num_bin)
+                return ('0'*missing_zeros+num_bin)
+            return num_bin
+
+        if (self.command_format == 'R') and (self.instruction[0] != 'jr'):
+            opcode =bin_sized(self.opcode,'opcode')
+            rd =bin_sized(self.rd,'rd')
+            rt =bin_sized(self.rt,'rt')
+            rs =bin_sized(self.rs,'rs')
+            funct =bin_sized(self.funct,'funct')
+            #TODO move shamt to init
+            if (self.funct == 0) or (self.funct == 2):
+                self.shamt = int(self.instruction[2])
+            else:
+                self.shamt = 0
+            
+            shamt =bin_sized(self.shamt,'shamt')
+            regs = rd + rt + rs + shamt + funct 
+            #m_code = machine_code('R')
+        elif self.command_format == 'I':
+            opcode =bin_sized(self.opcode,'opcode')
+            rt =bin_sized(self.rt,'rt')
+            rs =bin_sized(self.rs,'rs')
+            imm =bin_sized(self.imm,'imm')
+            
+            regs = rt + rs + imm
+            #m_code = machine_code('I')
+        else:
+            opcode = bin_sized(self.opcode,'opcode')
+            regs = bin_sized(int(self.instruction[1]),data.size['addr'])
+
+        return (opcode + regs)
+
     #TODO condsider rtype shift
     #initiallizing the registers for format R commands
     def r_registers(self):
