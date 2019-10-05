@@ -42,9 +42,12 @@ class InstructionIdentifier:
             rt = "    \n\nrt -> in DEC:  " + str(self.rt) + " in HEX: " +str(hex(self.rt))
             rs = "    \n\nrs -> in DEC: " + str(self.rs) + " in HEX: " +str(hex(self.rs))
             funct = "    \n\nfunct -> in DEC: " + str(self.funct) + " in HEX: " +str(hex(self.funct))
-            # if (self.funct == 0) or (self.funct == 2):
-                #TODO: shamt = 
-            regs = rd + rt + rs + funct 
+            if (self.funct == 0) or (self.funct == 2):
+                self.shamt = int(self.instruction[2])
+            else:
+                self.shamt = 0
+            shamt = "    \n\nshamt -> " +bin_sized(self.shamt,'shamt')
+            regs = rd + rt + rs + funct + shamt
             #m_code = machine_code('R')
         elif self.command_format == 'I':
             rt = "    rt: " + str(self.rt)
