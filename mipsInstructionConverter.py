@@ -1,5 +1,12 @@
 import commands_and_regs as data
 
+def bin_sized(dec_num,type_):
+    bits_size = data.size[type_]
+    num_bin = bin(dec_num)[2:]
+    if len(num_bin) < bits_size:
+        missing_zeros = bits_size - len(num_bin)
+        return ('0'*missing_zeros+num_bin)
+    return num_bin
 
 class InstructionIdentifier:
 
@@ -51,13 +58,6 @@ class InstructionIdentifier:
         return command + ("  -->") + foramt + opcode + regs
 
     def machine_code_detailed(self):
-        def bin_sized(dec_num,type_):
-            bits_size = data.size[type_]
-            num_bin = bin(dec_num)[2:]
-            if len(num_bin) < bits_size:
-                missing_zeros = bits_size - len(num_bin)
-                return ('0'*missing_zeros+num_bin)
-            return num_bin
 
         if (self.command_format == 'R') and (self.instruction[0] != 'jr'):
             opcode = "\n\nopcode ->  " +bin_sized(self.opcode,'opcode')
@@ -86,14 +86,6 @@ class InstructionIdentifier:
         return (opcode + regs)
 
     def machine_code(self):
-        def bin_sized(dec_num,type_):
-            bits_size = data.size[type_]
-            num_bin = bin(dec_num)[2:]
-            if len(num_bin) < bits_size:
-                missing_zeros = bits_size - len(num_bin)
-                return ('0'*missing_zeros+num_bin)
-            return num_bin
-
         if (self.command_format == 'R') and (self.instruction[0] != 'jr'):
             opcode =bin_sized(self.opcode,'opcode')
             rd =bin_sized(self.rd,'rd')
