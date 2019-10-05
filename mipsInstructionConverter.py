@@ -35,9 +35,9 @@ class InstructionIdentifier:
             rt = "    \n\nrt -> in DEC:  " + str(self.rt) + " in HEX: " +str(hex(self.rt))
             rs = "    \n\nrs -> in DEC: " + str(self.rs) + " in HEX: " +str(hex(self.rs))
             funct = "    \n\nfunct -> in DEC: " + str(self.funct) + " in HEX: " +str(hex(self.funct))
-            if (self.funct == 0) or (self.funct == 2):
+            # if (self.funct == 0) or (self.funct == 2):
                 #TODO: shamt = 
-            regs = rd + rt + rs + funct + shamt
+            regs = rd + rt + rs + funct 
             #m_code = machine_code('R')
         elif self.command_format == 'I':
             rt = "    rt: " + str(self.rt)
@@ -78,3 +78,11 @@ class InstructionIdentifier:
             self.rt = self.instruction[2] if self.command_order == 'branch' else self.instruction[1]
             self.rt = data.registers[self.rt] if self.rt in data.registers else self.rt
             self.imm = self.instruction[3]
+
+    def hex_sized(self,dec_num,type_):
+        bits_size = data.size[type_]
+        num_hex = hex(dec_num)[:2]
+        if len(num_hex) < bits_size:
+            missing_zeros = bits_size - len(num_hex)
+            return ('0'*missing_zeros+num_hex)
+        return num_hex
