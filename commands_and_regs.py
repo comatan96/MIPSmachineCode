@@ -58,3 +58,13 @@ registers = {
     'k1':27, 'gp':28, 'sp':29,
     'fp':30, 'ra':31
 }
+
+size = {
+    'opcode':6,
+    'rt':5,
+    'rs':5,
+    'rd':5,
+    'imm':16,
+    'shamt':5,
+    'funct':6,
+}
